@@ -36,7 +36,7 @@ namespace ProyectoVenta.Logica
                 {
                     conexion.Open();
                     StringBuilder query = new StringBuilder();
-                    query.AppendLine("update USUARIO set NombreUsuario = 'Admin', Clave = '123' where IdUsuario = 1;");
+                    query.AppendLine("update USUARIO set NombreUsuario = 'admin', Clave = '123' where IdUsuario = 1;");
                     SqlCommand cmd = new SqlCommand(query.ToString(), conexion);
                     cmd.CommandType = System.Data.CommandType.Text;
 
