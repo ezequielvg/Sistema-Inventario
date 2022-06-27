@@ -5,6 +5,7 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 namespace ProyectoVenta.Logica
 {
@@ -36,15 +37,15 @@ namespace ProyectoVenta.Logica
             try
             {
 
-                using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
+                using (SqlConnection conexion = new SqlConnection(Conexion.cadena))
                 {
                     conexion.Open();
 
                     string query = "select IdProducto,Codigo,Descripcion,Categoria,Almacen,Stock,PrecioVenta from PRODUCTO;";
-                    SQLiteCommand cmd = new SQLiteCommand(query, conexion);
+                    SqlCommand cmd = new SqlCommand(query, conexion);
                     cmd.CommandType = System.Data.CommandType.Text;
 
-                    using (SQLiteDataReader dr = cmd.ExecuteReader())
+                    using (SqlDataReader dr = cmd.ExecuteReader())
                     {
                         while (dr.Read())
                         {
@@ -76,7 +77,7 @@ namespace ProyectoVenta.Logica
         {
             mensaje = string.Empty;
             int respuesta = 0;
-            using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
+            using (SqlConnection conexion = new SqlConnection(Conexion.cadena))
             {
                 try
                 {
@@ -84,9 +85,9 @@ namespace ProyectoVenta.Logica
                     StringBuilder query = new StringBuilder();
                     query.AppendLine("select count(*)[resultado] from PRODUCTO where upper(Codigo) = upper(@pcodigo) and IdProducto != @defaultid");
 
-                    SQLiteCommand cmd = new SQLiteCommand(query.ToString(), conexion);
-                    cmd.Parameters.Add(new SQLiteParameter("@pcodigo", codigo));
-                    cmd.Parameters.Add(new SQLiteParameter("@defaultid", defaultid));
+                    SqlCommand cmd = new SqlCommand(query.ToString(), conexion);
+                    cmd.Parameters.Add(new SqlParameter("@pcodigo", codigo));
+                    cmd.Parameters.Add(new SqlParameter("@defaultid", defaultid));
                     cmd.CommandType = System.Data.CommandType.Text;
 
                     respuesta = Convert.ToInt32(cmd.ExecuteScalar().ToString());
@@ -109,7 +110,7 @@ namespace ProyectoVenta.Logica
             mensaje = string.Empty;
             int respuesta = 0;
             
-            using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
+            using (SqlConnection conexion = new SqlConnection(Conexion.cadena))
             {
                 try
                 {
@@ -120,11 +121,11 @@ namespace ProyectoVenta.Logica
                     query.AppendLine("insert into PRODUCTO(Codigo,Descripcion,Categoria,Almacen) values (@pcodigo,@pdescripcion,@pcategoria,@palmacen);");
                     query.AppendLine("select last_insert_rowid();");
 
-                    SQLiteCommand cmd = new SQLiteCommand(query.ToString(), conexion);
-                    cmd.Parameters.Add(new SQLiteParameter("@pcodigo", objeto.Codigo));
-                    cmd.Parameters.Add(new SQLiteParameter("@pdescripcion", objeto.Descripcion));
-                    cmd.Parameters.Add(new SQLiteParameter("@pcategoria", objeto.Categoria));
-                    cmd.Parameters.Add(new SQLiteParameter("@palmacen", objeto.Almacen));
+                    SqlCommand cmd = new SqlCommand(query.ToString(), conexion);
+                    cmd.Parameters.Add(new SqlParameter("@pcodigo", objeto.Codigo));
+                    cmd.Parameters.Add(new SqlParameter("@pdescripcion", objeto.Descripcion));
+                    cmd.Parameters.Add(new SqlParameter("@pcategoria", objeto.Categoria));
+                    cmd.Parameters.Add(new SqlParameter("@palmacen", objeto.Almacen));
                     cmd.CommandType = System.Data.CommandType.Text;
 
                     respuesta = Convert.ToInt32(cmd.ExecuteScalar().ToString());
@@ -146,7 +147,7 @@ namespace ProyectoVenta.Logica
             mensaje = string.Empty;
             int respuesta = 0;
 
-            using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
+            using (SqlConnection conexion = new SqlConnection(Conexion.cadena))
             {
                 try
                 {
@@ -156,12 +157,12 @@ namespace ProyectoVenta.Logica
 
                     query.AppendLine("update PRODUCTO set Codigo = @pcodigo,Descripcion = @pdescripcion,Categoria =@pcategoria ,Almacen = @palmacen where IdProducto = @pidproducto");
 
-                    SQLiteCommand cmd = new SQLiteCommand(query.ToString(), conexion);
-                    cmd.Parameters.Add(new SQLiteParameter("@pidproducto", objeto.IdProducto));
-                    cmd.Parameters.Add(new SQLiteParameter("@pcodigo", objeto.Codigo));
-                    cmd.Parameters.Add(new SQLiteParameter("@pdescripcion", objeto.Descripcion));
-                    cmd.Parameters.Add(new SQLiteParameter("@pcategoria", objeto.Categoria));
-                    cmd.Parameters.Add(new SQLiteParameter("@palmacen", objeto.Almacen));
+                    SqlCommand cmd = new SqlCommand(query.ToString(), conexion);
+                    cmd.Parameters.Add(new SqlParameter("@pidproducto", objeto.IdProducto));
+                    cmd.Parameters.Add(new SqlParameter("@pcodigo", objeto.Codigo));
+                    cmd.Parameters.Add(new SqlParameter("@pdescripcion", objeto.Descripcion));
+                    cmd.Parameters.Add(new SqlParameter("@pcategoria", objeto.Categoria));
+                    cmd.Parameters.Add(new SqlParameter("@palmacen", objeto.Almacen));
                     cmd.CommandType = System.Data.CommandType.Text;
 
                     respuesta = cmd.ExecuteNonQuery();
@@ -184,13 +185,13 @@ namespace ProyectoVenta.Logica
             int respuesta = 0;
             try
             {
-                using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
+                using (SqlConnection conexion = new SqlConnection(Conexion.cadena))
                 {
                     conexion.Open();
                     StringBuilder query = new StringBuilder();
                     query.AppendLine("delete from PRODUCTO where IdProducto= @id;");
-                    SQLiteCommand cmd = new SQLiteCommand(query.ToString(), conexion);
-                    cmd.Parameters.Add(new SQLiteParameter("@id", id));
+                    SqlCommand cmd = new SqlCommand(query.ToString(), conexion);
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
                     cmd.CommandType = System.Data.CommandType.Text;
                     respuesta = cmd.ExecuteNonQuery();
                 }

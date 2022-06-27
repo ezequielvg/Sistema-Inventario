@@ -5,6 +5,7 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 namespace ProyectoVenta.Logica
 {
@@ -35,14 +36,14 @@ namespace ProyectoVenta.Logica
             int respuesta = 0;
             try
             {
-                using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
+                using (SqlConnection conexion = new SqlConnection(Conexion.cadena))
                 {
                     conexion.Open();
                     StringBuilder query = new StringBuilder();
                     query.AppendLine("update PRODUCTO set Stock = Stock - @pcantidad where IdProducto = @pidproducto");
-                    SQLiteCommand cmd = new SQLiteCommand(query.ToString(), conexion);
-                    cmd.Parameters.Add(new SQLiteParameter("@pcantidad", cantidad));
-                    cmd.Parameters.Add(new SQLiteParameter("@pidproducto", idproducto));
+                    SqlCommand cmd = new SqlCommand(query.ToString(), conexion);
+                    cmd.Parameters.Add(new SqlParameter("@pcantidad", cantidad));
+                    cmd.Parameters.Add(new SqlParameter("@pidproducto", idproducto));
                     cmd.CommandType = System.Data.CommandType.Text;
                     respuesta = cmd.ExecuteNonQuery();
                     if (respuesta < 1) {
@@ -65,14 +66,14 @@ namespace ProyectoVenta.Logica
             int respuesta = 0;
             try
             {
-                using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
+                using (SqlConnection conexion = new SqlConnection(Conexion.cadena))
                 {
                     conexion.Open();
                     StringBuilder query = new StringBuilder();
                     query.AppendLine("update PRODUCTO set Stock = Stock + @pcantidad where IdProducto = @pidproducto");
-                    SQLiteCommand cmd = new SQLiteCommand(query.ToString(), conexion);
-                    cmd.Parameters.Add(new SQLiteParameter("@pcantidad", cantidad));
-                    cmd.Parameters.Add(new SQLiteParameter("@pidproducto", idproducto));
+                    SqlCommand cmd = new SqlCommand(query.ToString(), conexion);
+                    cmd.Parameters.Add(new SqlParameter("@pcantidad", cantidad));
+                    cmd.Parameters.Add(new SqlParameter("@pidproducto", idproducto));
                     cmd.CommandType = System.Data.CommandType.Text;
                     respuesta = cmd.ExecuteNonQuery();
                     if (respuesta < 1)
@@ -97,12 +98,12 @@ namespace ProyectoVenta.Logica
             int respuesta = 0;
             try
             {
-                using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
+                using (SqlConnection conexion = new SqlConnection(Conexion.cadena))
                 {
                     conexion.Open();
                     StringBuilder query = new StringBuilder();
                     query.AppendLine("select count(*) + 1 from SALIDA");
-                    SQLiteCommand cmd = new SQLiteCommand(query.ToString(), conexion);
+                    SqlCommand cmd = new SqlCommand(query.ToString(), conexion);
                     cmd.CommandType = System.Data.CommandType.Text;
                     respuesta = Convert.ToInt32(cmd.ExecuteScalar().ToString());
 
@@ -126,9 +127,9 @@ namespace ProyectoVenta.Logica
 
             mensaje = string.Empty;
             int respuesta = 0;
-            SQLiteTransaction objTransaccion = null;
+            SqlTransaction objTransaccion = null;
 
-            using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
+            using (SqlConnection conexion = new SqlConnection(Conexion.cadena))
             {
                 try
                 {
@@ -166,7 +167,7 @@ namespace ProyectoVenta.Logica
 
                     query.AppendLine("DROP TABLE _TEMP;");
 
-                    SQLiteCommand cmd = new SQLiteCommand(query.ToString(), conexion);
+                    SqlCommand cmd = new SqlCommand(query.ToString(), conexion);
                     cmd.CommandType = System.Data.CommandType.Text;
                     cmd.Transaction = objTransaccion;
                     respuesta = cmd.ExecuteNonQuery();
@@ -198,7 +199,7 @@ namespace ProyectoVenta.Logica
             List<VistaSalida> oLista = new List<VistaSalida>();
             try
             {
-                using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
+                using (SqlConnection conexion = new SqlConnection(Conexion.cadena))
                 {
                     conexion.Open();
                     StringBuilder query = new StringBuilder();
@@ -211,12 +212,12 @@ namespace ProyectoVenta.Logica
                     query.AppendLine("inner join DETALLE_SALIDA de on e.IdSalida = de.IdSalida");
                     query.AppendLine("where DATE(e.FechaRegistro) BETWEEN DATE(@pfechainicio) AND DATE(@pfechafin)");
 
-                    SQLiteCommand cmd = new SQLiteCommand(query.ToString(), conexion);
-                    cmd.Parameters.Add(new SQLiteParameter("@pfechainicio", fechainicio));
-                    cmd.Parameters.Add(new SQLiteParameter("@pfechafin", fechafin));
+                    SqlCommand cmd = new SqlCommand(query.ToString(), conexion);
+                    cmd.Parameters.Add(new SqlParameter("@pfechainicio", fechainicio));
+                    cmd.Parameters.Add(new SqlParameter("@pfechafin", fechafin));
                     cmd.CommandType = System.Data.CommandType.Text;
 
-                    using (SQLiteDataReader dr = cmd.ExecuteReader())
+                    using (SqlDataReader dr = cmd.ExecuteReader())
                     {
                         while (dr.Read())
                         {
@@ -254,7 +255,7 @@ namespace ProyectoVenta.Logica
 
             try
             {
-                using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
+                using (SqlConnection conexion = new SqlConnection(Conexion.cadena))
                 {
                     conexion.Open();
                     StringBuilder query = new StringBuilder();
@@ -262,11 +263,11 @@ namespace ProyectoVenta.Logica
                     query.AppendLine("NombreCliente,CantidadProductos,MontoTotal from SALIDA");
                     query.AppendLine("where NumeroDocumento = @pnumero");
 
-                    SQLiteCommand cmd = new SQLiteCommand(query.ToString(), conexion);
-                    cmd.Parameters.Add(new SQLiteParameter("@pnumero", numerodocumento));
+                    SqlCommand cmd = new SqlCommand(query.ToString(), conexion);
+                    cmd.Parameters.Add(new SqlParameter("@pnumero", numerodocumento));
                     cmd.CommandType = System.Data.CommandType.Text;
 
-                    using (SQLiteDataReader dr = cmd.ExecuteReader())
+                    using (SqlDataReader dr = cmd.ExecuteReader())
                     {
                         while (dr.Read())
                         {
@@ -299,7 +300,7 @@ namespace ProyectoVenta.Logica
             try
             {
 
-                using (SQLiteConnection conexion = new SQLiteConnection(Conexion.cadena))
+                using (SqlConnection conexion = new SqlConnection(Conexion.cadena))
                 {
                     conexion.Open();
                     StringBuilder query = new StringBuilder();
@@ -307,11 +308,11 @@ namespace ProyectoVenta.Logica
                     query.AppendLine("AlmacenProducto, PrecioVenta, Cantidad, SubTotal");
                     query.AppendLine("from DETALLE_SALIDA where IdSalida = @pidsalida");
 
-                    SQLiteCommand cmd = new SQLiteCommand(query.ToString(), conexion);
-                    cmd.Parameters.Add(new SQLiteParameter("@pidsalida", idsalida));
+                    SqlCommand cmd = new SqlCommand(query.ToString(), conexion);
+                    cmd.Parameters.Add(new SqlParameter("@pidsalida", idsalida));
                     cmd.CommandType = System.Data.CommandType.Text;
 
-                    using (SQLiteDataReader dr = cmd.ExecuteReader())
+                    using (SqlDataReader dr = cmd.ExecuteReader())
                     {
                         while (dr.Read())
                         {
